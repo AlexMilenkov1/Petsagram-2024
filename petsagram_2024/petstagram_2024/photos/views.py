@@ -22,5 +22,8 @@ def details_photo(request, photo_id):
     return render(request, 'photos/photo-details-page.html', context=context)
 
 
-def edit_photo(request):
+def edit_photo(request, photo_id):
     return render(request, 'photos/photo-edit-page.html')
+
+def delete_photo(request):
+    pass

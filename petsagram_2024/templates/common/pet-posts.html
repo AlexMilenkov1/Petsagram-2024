@@ -1,3 +1,4 @@
+{% load static %}
 <div class="card">
             <!-- Start User Details and Image Location -->
         <div class="top">
@@ -7,7 +8,7 @@
                     <div class="profilepic">
                         <div class="profile_img">
                             <div class="image">
-                                <img src="/static/images/person.png" alt="img8">
+                                <img src="{% static 'images/person.png' %}" alt="img8">
                             </div>
                         </div>
                     </div>
@@ -28,10 +29,10 @@
             </div>
         </div>
         <!-- End User Details and Image Location -->
-
+    
         <!-- Start Pet Photo -->
         <div class="imgBx" id='{{ photo.id }}'>
-            <img src="/static/images/axolotl.jpeg" alt="post" class="cover">
+            <img src="{% static 'images/axolotl.jpeg' %}" alt="post" class="cover">
         </div>
         <!-- End Pet Photo -->
 
@@ -75,8 +76,8 @@
             {% endfor %}
 
             <!-- Link to Photo Details Page -->
-            <a href="#">
-                <h4 class="details">{% url 'details-photo' photo.pk %}</h4>
+            <a href="{% url 'details-photo' photo.pk %}">
+                <h4 class="details">See Details</h4>
             </a>
 
             <!-- Date of Publication -->
