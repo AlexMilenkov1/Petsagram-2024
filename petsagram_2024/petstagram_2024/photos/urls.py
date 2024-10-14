@@ -7,5 +7,5 @@ urlpatterns = [
     path('add/', views.add_photo, name='add-photo'),
     path('<int:photo_id>/', views.details_photo, name='details-photo'),
     path('<int:pk>/edit/', views.edit_photo, name='edit-photo'),
-    path('<int:pk>/delete/', views.edit_photo, name='delete-photo'),
+    path('<int:pk>/delete/', views.delete_photo, name='delete-photo'),
 ]
