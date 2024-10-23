@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, resolve_url
+from django.views.generic import ListView
 
 from petstagram_2024.common.forms import CommentForm, SearchForm
 from petstagram_2024.common.models import Like
@@ -7,22 +8,29 @@ from petstagram_2024.photos.models import Photo
 from pyperclip import copy
 
 
-# Create your views here.
-def home_page(request):
-    all_photos = Photo.objects.all()
-    comment_form = CommentForm()
-    search_form = SearchForm(request.GET or None)
+class HomePage(ListView):
+    model = Photo
+    template_name = 'common/home-page.html'
+    context_object_name = 'all_photos'
+    paginate_by = 1
 
-    if search_form.is_valid():
-        all_photos = all_photos.filter(tagged_pets__name__icontains=search_form.cleaned_data['pet_name'])
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['comment_form'] = CommentForm()
+        context['search_form'] = SearchForm(self.request.GET)
 
-    context = {
-        'all_photos': all_photos,
-        'comment_form': comment_form,
-        'search_form': search_form
-    }
+        return context
 
-    return render(request, 'common/home-page.html', context=context)
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        filter_value = self.request.GET.get('pet_name')
+
+        if filter_value:
+            queryset = self.model.objects.filter(tagged_pets__name__icontains=filter_value)
+
+        return queryset
+
+
 
 
 def like_functionality(request, photo_id):

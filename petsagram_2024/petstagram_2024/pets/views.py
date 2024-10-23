@@ -52,19 +52,3 @@ class DeletePet(DeleteView):
 
     def get_initial(self):
         return self.object.__dict__
-
-
-# def delete_page(request, username, pet_slug):
-#     pet = Pet.objects.get(slug=pet_slug)
-#
-#     form = PetDeleteForm(instance=pet)
-#
-#     if request.method == 'POST':
-#             pet.delete()
-#             return redirect('profile-details', pk=1)
-#
-#     context = {
-#         'form': form
-#     }
-#
-#     return render(request, 'pets/pet-delete-page.html', context)
