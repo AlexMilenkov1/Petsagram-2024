@@ -61,3 +61,6 @@ def delete_photo(request, pk):
     photo_object.delete()
 
     return redirect('home-page')
+
+def test(request):
+    pass
