@@ -495,4 +495,14 @@ div.footer {
     cursor: not-allowed;
 }
 
+.button {
+    background-color: white;
+    border: none;
+    font-size: 22px;
+    margin: 2.5px 0px 0px 8px;
+    padding: 0;
+    cursor: pointer;
+}
+
+
 
