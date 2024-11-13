@@ -1,60 +1,59 @@
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, DetailView, UpdateView
 
 from petstagram_2024.common.forms import CommentForm
 from petstagram_2024.photos.forms import BasePhotoForm, EditPhotoForm
 from petstagram_2024.photos.models import Photo
 
 
-# Create your views here.
-def add_photo(request):
-    form = BasePhotoForm(request.POST or None, request.FILES or None)
+class AddPhoto(LoginRequiredMixin, CreateView):
+    model = Photo
+    form_class = BasePhotoForm
+    template_name = 'photos/photo-add-page.html'
 
-    if request.method == 'POST':
-        if form.is_valid():
-            form.save()
+    def form_valid(self, form):
+        photo = form.save(commit=False)
+        photo.user = self.request.user
 
-            return redirect('home-page')
+        return super().form_valid(form)
 
-    context = {
-        'form': form
-    }
-
-    return render(request, 'photos/photo-add-page.html', context)
-
-
-def details_photo(request, photo_id):
-    photo = Photo.objects.get(pk=photo_id)
-    likes = photo.likes.all()
-    comments = photo.comments.all()
-    comment_form = CommentForm()
-
-    context = {
-        'photo': photo,
-        'likes': likes,
-        'comments': comments,
-        'comment_form': comment_form
-    }
-
-    return render(request, 'photos/photo-details-page.html', context=context)
+    def get_success_url(self):
+        return reverse_lazy(
+            'profile-details',
+            kwargs={
+                'pk': self.request.user.pk
+            }
+        )
 
 
-def edit_photo(request, pk):
-    photo_object = Photo.objects.get(pk=pk)
-    form = EditPhotoForm(request.POST or None, instance=photo_object)
+class PhotoDetailsView(LoginRequiredMixin, DetailView):
+    model = Photo
+    template_name = 'photos/photo-details-page.html'
 
-    if request.method == 'POST':
-        if form.is_valid():
-            form.save()
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
 
-            return redirect('details-photo', pk)
+        context['likes'] = self.object.likes.all()
+        context['comments'] = self.object.comments.all()
+        context['comment_form'] = CommentForm()
+        self.object.has_liked = self.object.likes.filter(user=self.request.user).exists()
 
-    context = {
-        'form': form
-    }
-
-    return render(request, 'photos/photo-edit-page.html', context)
+        return context
 
 
+class PhotoEditPage(LoginRequiredMixin, UpdateView):
+    model = Photo
+    form_class = EditPhotoForm
+    template_name = 'photos/photo-edit-page.html'
+
+    def get_success_url(self):
+        return reverse_lazy('photo-details', kwargs={'pk': self.object.pk})
+
+
+@login_required
 def delete_photo(request, pk):
     photo_object = Photo.objects.get(pk=pk)
 

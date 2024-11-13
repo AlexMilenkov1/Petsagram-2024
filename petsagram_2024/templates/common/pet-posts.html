@@ -43,7 +43,7 @@
                     <!-- Start Like Button -->
                     <span class="heart">
                         <a href="{% url 'like' photo.pk %}">
-                            {% if photo.likes.all %}
+                            {% if photo.has_liked %}
                                 <i class="fa-solid fa-heart" style="color: #ed4040;"></i>
                              {% else %}   
                                 <i class="fa-regular fa-heart"></i>

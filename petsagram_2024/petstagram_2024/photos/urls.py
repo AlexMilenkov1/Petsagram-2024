@@ -4,8 +4,8 @@ from petstagram_2024.photos import views
 
 
 urlpatterns = [
-    path('add/', views.add_photo, name='add-photo'),
-    path('<int:photo_id>/', views.details_photo, name='details-photo'),
-    path('<int:pk>/edit/', views.edit_photo, name='edit-photo'),
+    path('add/', views.AddPhoto.as_view(), name='add-photo'),
+    path('<int:pk>/', views.PhotoDetailsView.as_view(), name='details-photo'),
+    path('<int:pk>/edit/', views.PhotoEditPage.as_view(), name='edit-photo'),
     path('<int:pk>/delete/', views.delete_photo, name='delete-photo'),
 ]

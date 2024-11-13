@@ -77,7 +77,7 @@
                            <!-- Link to Like Path -->
                 <a href="{% url 'like' photo.pk %}">
                                <!-- if user has liked the photo -->
-                    {% if photo.like_set.all %}
+                    {% if photo.has_liked %}
                         <i class="fa-solid fa-heart" style="color: #ed4040;"></i>
                         <!-- else -->
                     {% else %}

@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, resolve_url
 from django.views.generic import ListView
 
@@ -19,6 +20,12 @@ class HomePage(ListView):
         context['comment_form'] = CommentForm()
         context['search_form'] = SearchForm(self.request.GET)
 
+        for photo in context['all_photos']:
+            if self.request.user.is_authenticated:
+                photo.has_liked = photo.likes.filter(user=self.request.user).exists()
+            else:
+                photo.has_liked = False
+
         return context
 
     def get_queryset(self):
@@ -31,16 +38,15 @@ class HomePage(ListView):
         return queryset
 
 
-
-
+@login_required
 def like_functionality(request, photo_id):
     photo = Photo.objects.get(pk=photo_id)
-    liked_object = Like.objects.filter(to_photo_id=photo_id).first()
+    liked_object = Like.objects.filter(to_photo_id=photo_id, user=request.user).first()
 
     if liked_object:
         liked_object.delete()
     else:
-        like = Like(to_photo=photo)
+        like = Like(to_photo=photo, user=request.user)
         like.save()
 
     return redirect(request.META['HTTP_REFERER'] + f'#{photo_id}')
@@ -52,6 +58,7 @@ def share_functionality(request, photo_id):
     return redirect(request.META['HTTP_REFERER'] + f'#{photo_id}')
 
 
+@login_required
 def comment_functionality(request, photo_id):
     photo = Photo.objects.get(pk=photo_id)
 
@@ -61,6 +68,7 @@ def comment_functionality(request, photo_id):
         if form.is_valid():
             comment = form.save(commit=False)
             comment.to_photo = photo
+            comment.user = request.user
             comment.save()
 
             return redirect(request.META['HTTP_REFERER'] + f'#{photo_id}')
