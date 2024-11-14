@@ -1,8 +1,9 @@
 from django.contrib.auth import get_user_model
+from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, UpdateView
+from django.views.generic import CreateView, UpdateView, DetailView, DeleteView
 
 from petstagram_2024.accounts.forms import AppUserCreationForm, ProfileEditForm
 from petstagram_2024.accounts.models import Profile
@@ -27,14 +28,27 @@ class AppUserLogoutView(LogoutView):
     pass
 
 
-def show_profile_details(request, pk):
-    return render(request, 'accounts/profile-details-page.html')
+class ProfileDetailView(DetailView):
+    model = UserModel
+    template_name = 'accounts/profile-details-page.html'
+    context_object_name = 'user'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['all_likes_count'] = sum(p.likes.count() for p in self.object.photos.all())
+
+        return context
 
 
-class ProfileEditView(UpdateView):
+class ProfileEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Profile
     template_name = 'accounts/profile-edit-page.html'
     form_class = ProfileEditForm
+
+    def test_func(self):
+        profile = get_object_or_404(Profile, pk=self.kwargs['pk'])
+        return self.request.user == profile.user
 
     def get_success_url(self):
         return reverse_lazy(
@@ -45,5 +59,17 @@ class ProfileEditView(UpdateView):
         )
 
 
-def delete_profile(request):
-    return render(request, 'accounts/profile-delete-page.html')
+class ProfileDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Profile
+    template_name = 'accounts/profile-delete-page.html'
+    success_url = reverse_lazy('home-page')
+
+    def test_func(self):
+        profile = get_object_or_404(Profile, pk=self.kwargs['pk'])
+        return self.request.user == profile.user
+    
+    def form_valid(self, form):
+        self.object.user.delete()
+        
+        return super().form_valid(form)
+        

@@ -1,5 +1,5 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render, redirect
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, UpdateView, DeleteView
 
@@ -41,11 +41,15 @@ class PetDetails(DetailView):
         return context
 
 
-class EditPet(LoginRequiredMixin, UpdateView):
+class EditPet(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Pet
     template_name = 'pets/pet-edit-page.html'
     slug_url_kwarg = 'pet_slug'
     form_class = PetEditForm
+
+    def test_func(self):
+        pet = get_object_or_404(Pet, slug=self.kwargs['slug'])
+        return self.request.user == pet.user
 
     def get_success_url(self):
         return reverse_lazy(
@@ -57,12 +61,16 @@ class EditPet(LoginRequiredMixin, UpdateView):
         )
 
 
-class DeletePet(LoginRequiredMixin, DeleteView):
+class DeletePet(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Pet
     form_class = PetDeleteForm
     template_name = 'pets/pet-delete-page.html'
     success_url = reverse_lazy('profile-details', kwargs={'pk': 1})
     slug_url_kwarg = 'pet_slug'
+
+    def test_func(self):
+        pet = get_object_or_404(Pet, slug=self.kwargs['slug'])
+        return self.request.user == pet.user
 
     def get_initial(self):
         return self.object.__dict__

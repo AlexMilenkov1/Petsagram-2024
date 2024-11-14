@@ -8,16 +8,20 @@
                     <div class="profilepic">
                         <div class="profile_img">
                             <div class="image">
-                                <img src="{% static 'images/person.png' %}" alt="img8">
+                                {% if photo.user.profile.profile_picture %}
+                                    <img src="{{ photo.user.profile.profile_picture }}">
+                                {% else %}    
+                                    <img src="{% static 'images/person.png' %}" alt="img8">
+                                {% endif %}
                             </div>
                         </div>
                     </div>
                 </a>
                 <h3>
                     <!-- Link to User Profile Page -->
-                    <a href="#">
+                    <a href="{% url 'profile-details' photo.user.pk %}">
                         <!-- if user has first and last name -->
-                        Diyan Kalaydzhiev
+                        {{ photo.user.profile.get_profile_names }}
                         <!-- else -->
                         <!-- show user username -->
                     </a>
@@ -70,7 +74,7 @@
             {% for pet in photo.tagged_pets.all %}
                 <a href="{% url 'details-pet' "username" pet.slug %}">
                     <p class="message">
-                        <b>{{ pet.name }}e</b>
+                        <b>{{ pet.name }}</b>
                     </p>
                 </a>
             {% endfor %}

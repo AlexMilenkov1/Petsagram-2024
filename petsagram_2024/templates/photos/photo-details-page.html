@@ -3,7 +3,7 @@
 
 {% block content %}
     <div class="container">
-        <div class="col-9">
+        <div class="col-9-details">
 
             <!-- Start Pet Photo Post Section -->
             <div class="card">
@@ -16,7 +16,11 @@
                             <div class="profilepic">
                                 <div class="profile_img">
                                     <div class="image">
-                                        <img src="{% static '/images/person.png' %}" alt="img8">
+                                        {% if photo.user.profile.profile_picture %}
+                                            <img src="{{ photo.user.profile.profile_picture }}">
+                                        {% else %}
+                                            <img src="{% static 'images/person.png' %}" alt="img8">
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
@@ -24,9 +28,9 @@
                         <h3>
 
                             <!-- Link to User Profile Details Page -->
-                            <a href="#">
+                            <a href="{% url 'profile-details' photo.user.pk %}">
                                 <!-- IF user has first and last name -->
-                                Diyan Kalaydzhiev
+                                {{ photo.user.profile.get_profile_names }}
                                 <!-- else -->
                                 <!-- show user username -->
                             </a>
@@ -36,22 +40,24 @@
                             {% if photo.location %}
                                 <span>{{ photo.location }}</span>
                             {% endif %}
-
+                            
+                            {% if request.user == photo.user %}
                             <!-- IF the viewer is the creator of the photo -->
-                            <div class="edit-delete-btns">
-
-                                <!-- Link to Edit Pet Photo Page -->
-                                <a href="{% url 'edit-photo' photo.pk %}">
-                                    <img class="edit-img" src="{% static '/images/edit-pen-icon-6.jpg' %}"
-                                         alt="edit button">
-                                </a>
-
-                                <!-- Link to Delete Pet Photo Page -->
-                                <a href="{% url 'delete-photo' photo.pk %}">
-                                    <img class="bin-img" src="{% static '/images/icon-remove-22.jpg' %}"
-                                         alt="bin button">
-                                </a>
-                            </div>
+                                <div class="edit-delete-btns">
+                                    
+                                    <!-- Link to Edit Pet Photo Page -->
+                                    <a href="{% url 'edit-photo' photo.pk %}">
+                                        <img class="edit-img" src="{% static '/images/edit-pen-icon-6.jpg' %}"
+                                             alt="edit button">
+                                    </a>
+    
+                                    <!-- Link to Delete Pet Photo Page -->
+                                    <a href="{% url 'delete-photo' photo.pk %}">
+                                        <img class="bin-img" src="{% static '/images/icon-remove-22.jpg' %}"
+                                             alt="bin button">
+                                    </a>
+                                </div>
+                            {% endif %}
                             <!-- End IF the viewer is the creator of the photo -->
 
                         </h3>
@@ -130,7 +136,7 @@
                                         <p>
                                             <!-- Link to User Profile Details Page-->
                                             <!-- User First and/or Last Name or username-->
-                                            <a href="">Steven Ivanov</a>
+                                            <a href="{% url 'profile-details'  comment.to_photo.user.pk %}">{{ comment.to_photo.user.profile.get_profile_names }}</a>
                                             <!-- User Comment -->
                                             {{ comment.text }}
                                         </p>
