@@ -40,3 +40,24 @@ class DeletePhotoTestView(TestCase):
 
         self.assertFalse(Photo.objects.filter(pk=self.photo.pk).exists())
         self.assertRedirects(response, reverse('home-page'))
+
+    def test_get_photo__delete_it__by_random_user__not_successful(self):
+        self.client.login(
+            email='test2@test.gmail',
+            password='12admin34'
+        )
+
+        response = self.client.post(
+            reverse('delete-photo', kwargs={'pk': self.photo.pk})
+        )
+
+        self.assertTrue(Photo.objects.filter(pk=self.photo.pk).exists())
+        self.assertRedirects(response, reverse('home-page'))
+
+    def test_anonymous_user__deleting_photo__not_successful(self):
+        response = self.client.post(
+            reverse('delete-photo', kwargs={'pk': self.photo.pk})
+        )
+
+        self.assertTrue(Photo.objects.filter(pk=self.photo.pk).exists())
+        self.assertRedirects(response, f'{reverse('login')}?next=/photos/{self.photo.pk}/delete/')
