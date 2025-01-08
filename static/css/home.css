@@ -174,6 +174,8 @@ main .container {
     width: 65%;
     margin-left: 450px;
     margin-top: 100px;
+    border: 2px solid #dedede;
+    padding: 20px;
 }
 
 .col-9 .card {
@@ -331,7 +333,7 @@ main .container {
 
 .addComments button {
     position: absolute;
-    right: 30px;
+    left: 1325px;
     color: #1d92ffcb;
     font-weight: 500;
     font-size: 15px;
@@ -348,10 +350,9 @@ main .container {
 }
 
 textarea {
-    position: absolute;
-    left: 30px;
-    width: 85%;
     resize: none;
+    left: 30px;
+    width: 120%;
     overflow: hidden;
     height: 20px;
     border: none;
@@ -360,6 +361,10 @@ textarea {
     font-size: 14px;
     color: #262626;
     background: none;
+}
+
+.photo-location span {
+    color: #a2a2a2;
 }
 
 textarea.text::placeholder {

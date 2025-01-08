@@ -2,6 +2,23 @@
     color: initial;
 }
 
+.userDetails  {
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+
+.user-details-name {
+    font-size: 1.3em;
+    font-family: "Segoe UI", sans-serif;
+    font-weight: bold;
+    position: absolute;
+    left: 510px;
+}
+
 .pet-details {
     margin: 5px 0 5px -1px;
 }
