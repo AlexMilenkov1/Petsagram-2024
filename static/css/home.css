@@ -332,8 +332,7 @@ main .container {
 }
 
 .addComments button {
-    position: absolute;
-    left: 1325px;
+    margin-left: 35em;
     color: #1d92ffcb;
     font-weight: 500;
     font-size: 15px;

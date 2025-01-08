@@ -87,6 +87,7 @@
 
 .edit-photo p {
 	display: flex;
+	gap: 2em;
 }
 
 .delete-btn {
