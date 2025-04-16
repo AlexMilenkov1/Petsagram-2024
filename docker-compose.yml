@@ -1,0 +1,29 @@
+services:
+    postgres:
+        container_name: db
+        environment:
+            - POSTGRES_PASSWORD=999999991
+            - POSTGRES_DB=petstagram_db
+            - PGDATA=/var/lib/postgresql/data/pgdata
+        ports:
+            - 5432:5432
+        volumes:
+            - pgdata:/var/lib/postgresql/data
+        networks:
+            - petstagram-network
+        image: postgres
+    petstagram:
+        ports:
+            - 8001:8000
+        container_name: petstagram-instance
+        networks:
+            - petstagram-network
+        env_file:
+            - .env
+        image: petstagram
+networks:
+    petstagram-network:
+        name: petstagram-network
+volumes:
+    pgdata:
+        name: pgdata
