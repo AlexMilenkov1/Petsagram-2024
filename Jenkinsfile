@@ -1,7 +1,7 @@
 pipeline {
     agent {
         docker {
-            image 'python:3.9-slim'  # Official Python image
+            image 'python:3.9-slim'
             args '-v /tmp:/tmp'
         }
 
