@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/AlexMilenkov1/Petsagram-2024'
+                git branch: 'main', url: 'https://github.com/AlexMilenkov1/Petsagram-2024'
             }
         }
 
