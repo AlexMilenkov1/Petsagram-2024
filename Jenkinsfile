@@ -13,7 +13,7 @@ pipeline {
                 bat '''
                     python -m venv venv || exit /b 1
                     call venv\\Scripts\\activate || exit /b 1
-                    pip install --upgrade pip || exit /b 1
+                    python -m pip install --upgrade pip || exit /b 1
                     pip install -r requirements.txt || exit /b 1
                 '''
             }
@@ -22,9 +22,7 @@ pipeline {
 
         stage('Trigger Render Deploy') {
             steps {
-                bat '''
-                    curl -X POST "https://api.render.com/deploy/srv-d01mkt2dbo4c738toc3g?key=nqwk7W7TOdk" || exit /b 1
-                '''
+                bat 'curl -X POST "https://api.render.com/deploy/srv-d01mkt2dbo4c738toc3g?key=nqwk7W7TOdk" || exit /b 1'
             }
         }
     }
