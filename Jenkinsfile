@@ -1,5 +1,9 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'python:3.9-slim'  # Official Python image
+            args '-v /tmp:/tmp'
+        }
 
     stages {
         stage('Checkout') {
@@ -9,12 +13,12 @@ pipeline {
         }
 
         stage('Set up Python') {
-            steps {
+             steps {
                 sh '''
-                    python -m venv venv
-                    source venv/bin/activate
-                    pip install --upgrade pip
-                    pip install -r requirements.txt
+                    python3 -m venv venv || exit 1
+                    . venv/bin/activate || exit 1
+                    pip install --upgrade pip || exit 1
+                    pip install -r requirements.txt || exit 1
                 '''
             }
         }
