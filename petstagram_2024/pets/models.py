@@ -2,11 +2,7 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.text import slugify
 
-
-# Create your models here.
-
 UserModel = get_user_model()
-
 
 class Pet(models.Model):
     name = models.CharField(
@@ -15,7 +11,8 @@ class Pet(models.Model):
         null=False
     )
 
-    personal_photo = models.URLField(
+    personal_photo = models.ImageField(
+        upload_to='pet_photos/',
         blank=False,
         null=False
     )
@@ -38,11 +35,9 @@ class Pet(models.Model):
     )
 
     def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-
+        # Save once to generate `id`
         if not self.slug:
             self.slug = slugify(f'{self.name}-{self.id}')
-
         super().save(*args, **kwargs)
 
     def __str__(self):

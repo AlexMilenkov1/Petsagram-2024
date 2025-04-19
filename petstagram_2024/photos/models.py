@@ -8,10 +8,9 @@ from petstagram_2024.photos.validators import FileSizeValidator
 UserModel = get_user_model()
 
 
-# Create your models here.
 class Photo(models.Model):
     photo = models.ImageField(
-        upload_to='images',
+        upload_to='user_photos/',  # You can rename this folder if you'd like
         null=False,
         blank=False,
         validators=[
@@ -45,4 +44,3 @@ class Photo(models.Model):
         on_delete=models.CASCADE,
         related_name='photos',
     )
-

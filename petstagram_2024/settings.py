@@ -2,14 +2,18 @@ import os
 from pathlib import Path
 from django.urls import reverse_lazy
 import dj_database_url
+from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+load_dotenv()
 
 # Secret Key
 SECRET_KEY = os.environ.get('SECRET_KEY', 'unsafe-default-secret-key')
 
 # Debug mode
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+# DEBUG = True
 
 # Allowed hosts
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
@@ -64,7 +68,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'petstagram_2024.wsgi.application'
 
-# Database setup: use DATABASE_URL if available (Render), else use individual values (.env)
 if 'DATABASE_URL' in os.environ:
     DATABASES = {
         'default': dj_database_url.config(conn_max_age=600)
@@ -80,6 +83,18 @@ else:
             'PORT': os.environ.get('DB_PORT', '5432'),
         }
     }
+
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "pets_test",
+#         "USER": "postgres",
+#         "PASSWORD": "999999991",
+#         "HOST": "localhost",
+#         "PORT": "5432",
+#     }
+# }
+
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -115,3 +130,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'accounts.AppUser'
 LOGIN_REDIRECT_URL = reverse_lazy('home-page')
 LOGOUT_REDIRECT_URL = reverse_lazy('home-page')
+
