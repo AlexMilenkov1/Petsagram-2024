@@ -4,6 +4,7 @@ pipeline {
             image 'python:3.9-slim'
             args '-v /tmp:/tmp'
         }
+    }
 
     stages {
         stage('Checkout') {
@@ -13,7 +14,7 @@ pipeline {
         }
 
         stage('Set up Python') {
-             steps {
+            steps {
                 sh '''
                     python3 -m venv venv || exit 1
                     . venv/bin/activate || exit 1
