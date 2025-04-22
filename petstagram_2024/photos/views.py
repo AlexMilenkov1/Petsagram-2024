@@ -8,7 +8,6 @@ from petstagram_2024.common.forms import CommentForm
 from petstagram_2024.photos.forms import BasePhotoForm, EditPhotoForm
 from petstagram_2024.photos.models import Photo
 
-
 class AddPhoto(LoginRequiredMixin, CreateView):
     model = Photo
     form_class = BasePhotoForm
@@ -17,7 +16,6 @@ class AddPhoto(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         photo = form.save(commit=False)
         photo.user = self.request.user
-
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -28,21 +26,17 @@ class AddPhoto(LoginRequiredMixin, CreateView):
             }
         )
 
-
 class PhotoDetailsView(LoginRequiredMixin, DetailView):
     model = Photo
     template_name = 'photos/photo-details-page.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
         context['likes'] = self.object.likes.all()
         context['comments'] = self.object.comments.all()
         context['comment_form'] = CommentForm()
         self.object.has_liked = self.object.likes.filter(user=self.request.user).exists()
-
         return context
-
 
 class PhotoEditPage(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Photo
@@ -56,12 +50,9 @@ class PhotoEditPage(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def get_success_url(self):
         return reverse_lazy('details-photo', kwargs={'pk': self.object.pk})
 
-
 @login_required
 def delete_photo(request, pk):
     photo_object = Photo.objects.get(pk=pk)
-
     if photo_object.user.pk == request.user.pk:
         photo_object.delete()
-
     return redirect('home-page')

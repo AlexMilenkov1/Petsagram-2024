@@ -2,20 +2,27 @@
 {% load static %}
 
 {% block content %}
-    <main>
-        <!-- Start Edit Pet Section -->
-        <div class="edit-delete edit-photo">
-            <h2>Edit Pet</h2>
-            <!-- Start Edit Pet From -->
-            <form method="post">
+<main>
+    <div class="edit-pet-container">
+        <div class="edit-pet-card">
+            <h2>Edit Your Pet</h2>
+
+            <form method="post" enctype="multipart/form-data" class="edit-pet-form">
                 {% csrf_token %}
-                {{ form.as_p }}
-                <button class="edit-btn" type="submit">Edit</button>
+
+                {% for field in form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                            <p class="field-error">{{ field.errors }}</p>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                <button class="submit-button" type="submit">Save Changes</button>
             </form>
-            <!-- End Edit Pet Form -->
-    
         </div>
-        <!-- End Edit Pet Section -->
-    
-    </main>
+    </div>
+</main>
 {% endblock %}

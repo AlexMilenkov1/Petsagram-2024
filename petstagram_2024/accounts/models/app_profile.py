@@ -1,3 +1,4 @@
+from cloudinary.models import CloudinaryField
 from django.contrib.auth import get_user_model
 from django.db import models
 
@@ -28,9 +29,10 @@ class Profile(models.Model):
         blank=True,
     )
 
-    profile_picture = models.URLField(
-        null=True,
-        blank=True,
+    profile_picture = CloudinaryField(
+        'image',  # This will store the image on Cloudinary
+        blank=False,
+        null=False
     )
 
     def get_profile_names(self):

@@ -26,6 +26,6 @@ class ProfileEditForm(forms.ModelForm):
             'first_name': 'First Name:',
             'last_name': 'Last Name:',
             'date_of_birth': 'Birthdate',
-            'profile_picture': 'Profile Picture',
+            'profile_picture': 'Picture',
         }
 

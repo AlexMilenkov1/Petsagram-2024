@@ -4,121 +4,72 @@
 {% block content %}
     <div class="container">
         <div class="col-9-details">
-
             <!-- Start Pet Photo Post Section -->
             <div class="card">
                 <div class="top">
-
                     <!-- Start User Details and Image Location Section -->
                     <div class="userDetails-photo">
-                        <!-- Link to User Profile Details Page-->
                         <a href="#" class="image-username">
                             <div class="profilepic">
                                 <div class="profile_img">
                                     <div class="image">
                                         {% if photo.user.profile.profile_picture %}
-                                            <img src="{{ photo.user.profile.profile_picture }}">
+                                            <img src="{{ photo.user.profile.profile_picture.url }}">
                                         {% else %}
                                             <img src="{% static 'images/person.png' %}" alt="img8">
                                         {% endif %}
                                     </div>
                                 </div>
                             </div>
-
-                              <!-- Link to User Profile Details Page -->
-                            <a href="{% url 'profile-details' photo.user.pk %}" class="user-details-name">
-                                <!-- IF user has first and last name -->
-                                {{ photo.user.profile.get_profile_names }}
-                                <!-- else -->
-                                <!-- show user username -->
-                            </a>
+                        </a>
+                        <a href="{% url 'profile-details' photo.user.pk %}" class="user-details-name">
+                            {{ photo.user.profile.get_profile_names }}
                         </a>
                         <h3 class="photo-location">
-
-                            <!-- IF the photo has location -->
                             {% if photo.location %}
                                 <span>{{ photo.location }}</span>
                             {% endif %}
-
                             {% if request.user == photo.user %}
-                                <!-- IF the viewer is the creator of the photo -->
                                 <div class="edit-delete-btns">
-
-                                    <!-- Link to Edit Pet Photo Page -->
                                     <a href="{% url 'edit-photo' photo.pk %}">
-                                        <img class="edit-img" src="{% static '/images/edit-pen-icon-6.jpg' %}"
-                                             alt="edit button">
+                                        <img class="edit-img" src="{% static '/images/edit-pen-icon-6.jpg' %}" alt="edit button">
                                     </a>
-
-                                    <!-- Link to Delete Pet Photo Page -->
                                     <a href="{% url 'delete-photo' photo.pk %}">
-                                        <img class="bin-img" src="{% static '/images/icon-remove-22.jpg' %}"
-                                             alt="bin button">
+                                        <img class="bin-img" src="{% static '/images/icon-remove-22.jpg' %}" alt="bin button">
                                     </a>
                                 </div>
                             {% endif %}
-                            <!-- End IF the viewer is the creator of the photo -->
-
                         </h3>
                     </div>
                     <!-- End User Details and Image Location Section -->
-
                 </div>
-
-                <!-- Start Pet Photo -->
                 <div class="imgBx" id="{{ photo.pk }}">
-                    <!-- Pet Photo -->
-                    <img src="{{ photo.image.url }}" alt="post" class="cover">
+                    <img src="{{ photo.photo.url }}" alt="post" class="cover">
                 </div>
-                <!-- End Pet Photo -->
                 <div class="bottom">
-
-                    <!-- Start Like and Share Buttons Section -->
                     <div class="actionBtns">
                         <div class="left">
-
-                            <!-- Start Like Button -->
                             <span class="heart">
-                           <!-- Link to Like Path -->
-                <a href="{% url 'like' photo.pk %}">
-                               <!-- if user has liked the photo -->
-                    {% if photo.has_liked %}
-                        <i class="fa-solid fa-heart" style="color: #ed4040;"></i>
-                        <!-- else -->
-                    {% else %}
-                        <i class="fa-regular fa-heart"></i>
-                    {% endif %}
-   </a>
-                   </span>
-                            <!-- End Like Button -->
-
-                            <!-- Start Share  Button -->
-
-                            <!-- Link to Share Path -->
+                                <a href="{% url 'like' photo.pk %}">
+                                    {% if photo.has_liked %}
+                                        <i class="fa-solid fa-heart" style="color: #ed4040;"></i>
+                                    {% else %}
+                                        <i class="fa-regular fa-heart"></i>
+                                    {% endif %}
+                                </a>
+                            </span>
                             <a href="{% url 'share' photo.pk %}">
                                 <i class="fa-solid fa-share"></i>
                             </a>
                         </div>
                     </div>
-                    <!-- End Like and Share Buttons Section -->
-
-                    <!-- Number of Likes for the Photo -->
                     <p class="likes">{{ likes.count }} likes</p>
-
-                    <!-- Start Tagged Pets Section-->
                     {% for pet in photo.tagged_pets.all %}
-                        <!-- Link to First Tagged Pet Details Page -->
-                        <a href="{% url 'details-pet' "username" pet.slug %}">
-                            <p class="message">
-                                <b>{{ pet.name }}</b>
-                            </p>
+                        <a href="{% url 'details-pet' pet.user.pk pet.slug %}">
+                            <p class="message"><b>{{ pet.name }}</b></p>
                         </a>
-                        <!-- End Tagged Pets Section-->
                     {% endfor %}
-
-                    <!-- Date of Publication or edit of the Photo -->
                     <h5 class="postTime">{{ photo.date_of_publication }}</h5>
-                    <!-- Start Comments Section -->
                     {% for comment in comments %}
                         <div class="comments">
                             <div class="top">
@@ -127,16 +78,14 @@
                                         <div class="profilepic">
                                             <div class="profile_img">
                                                 <div class="image">
-                                                    <!-- User Profile Image -->
                                                     <img src="{% static 'images/person.png' %}" alt="img8">
                                                 </div>
                                             </div>
                                         </div>
                                         <p>
-                                            <!-- Link to User Profile Details Page-->
-                                            <!-- User First and/or Last Name or username-->
-                                            <a href="{% url 'profile-details'  comment.to_photo.user.pk %}">{{ comment.to_photo.user.profile.get_profile_names }}</a>
-                                            <!-- User Comment -->
+                                            <a href="{% url 'profile-details' comment.to_photo.user.pk %}">
+                                                {{ comment.to_photo.user.profile.get_profile_names }}
+                                            </a>
                                             {{ comment.text }}
                                         </p>
                                     </div>
@@ -144,28 +93,17 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- End Comments Section -->
                     {% endfor %}
                 </div>
-
-                <!-- Start Add Comments Section -->
                 <div class="addComments">
-                    <!-- Start Add Comments Form -->
                     <form method="post" action="{% url 'comment' photo.pk %}">
                         <label for="id_body">Body:</label>
                         {% csrf_token %}
                         {{ comment_form }}
                         <button type="submit">Post</button>
                     </form>
-                    <!-- End Add Comments Form -->
-
                 </div>
-                <!-- End Add Comments Section -->
-
             </div>
-            <!-- End Pet Photo Post Section -->
-
         </div>
     </div>
-
 {% endblock %}

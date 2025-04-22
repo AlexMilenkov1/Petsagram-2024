@@ -1,3 +1,4 @@
+from cloudinary.models import CloudinaryField
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.text import slugify
@@ -11,8 +12,8 @@ class Pet(models.Model):
         null=False
     )
 
-    personal_photo = models.ImageField(
-        upload_to='pet_photos/',
+    personal_photo = CloudinaryField(
+        'image',  # This will store the image on Cloudinary
         blank=False,
         null=False
     )
@@ -35,10 +36,17 @@ class Pet(models.Model):
     )
 
     def save(self, *args, **kwargs):
-        # Save once to generate `id`
+        if not self.pk:
+            # Save once to get a primary key
+            super().save(*args, **kwargs)
+            # Then generate a slug with a proper ID
+            self.slug = slugify(f'{self.name}-{self.id}')
+            # Save again to update the slug
+            return super().save(update_fields=['slug'])
+
         if not self.slug:
             self.slug = slugify(f'{self.name}-{self.id}')
-        super().save(*args, **kwargs)
+        return super().save(*args, **kwargs)
 
     def __str__(self):
-        return f'{self.name}'
+        return self.name

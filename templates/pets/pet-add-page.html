@@ -3,21 +3,13 @@
 
 {% block content %}
     <main>
-    
-        <!-- Start Add Pet Section-->
         <div class="edit-delete edit-photo">
             <h2>Add pet</h2>
-
-            <!-- Start Add Pet Form -->
-            <form method="post">
+            <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ form.as_p }}
                 <button class="add-btn">Add Pet</button>
             </form>
-            <!-- End Add Pet Form -->
-    
         </div>
-        <!-- End Add Pet Section -->
-    
     </main>
 {% endblock %}

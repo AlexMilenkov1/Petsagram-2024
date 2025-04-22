@@ -1,7 +1,5 @@
 from django.urls import path
-
 from petstagram_2024.photos import views
-
 
 urlpatterns = [
     path('add/', views.AddPhoto.as_view(), name='add-photo'),

@@ -1,7 +1,6 @@
 {% extends 'common/base.html' %}
 {% load static %}
 
-
 {% block content %}
     <main>
         <!-- Start Profile Details Section -->
@@ -12,7 +11,7 @@
                     <div class="image">
                         <!-- Profile Image -->
                         {% if user.profile.profile_picture %}
-                            <img src="{{ user.profile.profile_picture }}"/>
+                            <img src="{{ user.profile.profile_picture.url }}"/>
                         {% else %}
                             <img src="{% static 'images/person.png' %}" alt="img8"/>
                         {% endif %}
@@ -71,13 +70,13 @@
                     <!-- Start 1st Pet Details Page -->
                     <!-- Link to First Pet Details Page -->
                     {% for pet in user.pets.all %}
-                        <a href="{% url 'details-pet' user.profile.get_profile_names pet.slug %}">
+                        <a href="{% url 'details-pet' pet.user.pk pet.slug %}">
                             <div class="head-pet">
                                 <div class="status">
                                     <div class="image">
                                         <!-- Pet Image -->
                                         <img
-                                                src="{{ pet.personal_photo }}"
+                                                src="{{ pet.personal_photo.url }}"
                                                 alt="pet img"
                                         />
                                     </div>

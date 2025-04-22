@@ -102,7 +102,6 @@
     padding: 20px 0;
     overflow: auto;
     max-width: 850px;
-    justify-content: center;
 }
 
 .statuses .status {
