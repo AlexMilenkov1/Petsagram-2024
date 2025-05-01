@@ -23,7 +23,6 @@ A social media web application for pet lovers to share photos of their pets. Bui
 - **CI/CD:** Jenkins, GitHub Webhooks  
 - **Deployment:** Render  
 - **Cloud Storage:** Cloudinary  
-- **Other:** Ngrok (for local webhook testing)  
 
 ## 📁 Project Structure
 
